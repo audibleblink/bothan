@@ -30,7 +30,7 @@ Successes are written to Stdout, all other logs, Stderr.
 ## Install
 
 ```bash
-go get github.com/audiblelink/bothan
+go get github.com/audibleblink/bothan
 ```
 
 ## Build
