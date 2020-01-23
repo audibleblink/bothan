@@ -5,10 +5,14 @@ import (
 )
 
 // Empire type
-type Empire Tool
+type Empire struct {
+	Tool
+}
 
 func init() {
-	Registry["empire"] = Empire{}
+	tool := &Empire{}
+	tool.SetName("Empire")
+	Registry["empire"] = tool
 }
 
 // IsBad evaluates confidence in a target's badness

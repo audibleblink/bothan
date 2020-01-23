@@ -114,10 +114,11 @@ func execute(cmd *cobra.Command, args []string) {
 		})
 		successLogger.SetOutput(os.Stdout)
 
-		for name, ost := range modules.Registry {
+		for _, ost := range modules.Registry {
+
 			if ost.IsBad(rawReq) {
 				successLogger.WithFields(log.Fields{
-					"tool": name,
+					"tool": ost.Name(),
 					"host": rawReq.Request.URL.String(),
 				}).Info("SUCCESS")
 			}

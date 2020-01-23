@@ -6,10 +6,22 @@ import "net/http"
 var Registry = make(map[string]ToolInt)
 
 // ToolInt is the interface which all OST modules should satisfy
-type ToolInt interface{ IsBad(*Query) bool }
+type ToolInt interface {
+	IsBad(*Query) bool
+	Name() string
+	SetName(string)
+}
 
 // Tool is the structure by which individual OSTs will be instantiated
-type Tool struct{ Name string }
+type Tool struct{ name string }
+
+func (t *Tool) Name() string {
+	return t.name
+}
+
+func (t *Tool) SetName(name string) {
+	t.name = name
+}
 
 // Query is a wrapper around raw HTTP requests
 type Query struct {
