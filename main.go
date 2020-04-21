@@ -9,6 +9,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"os"
+	"time"
 
 	"github.com/audibleblink/bothan/modules"
 
@@ -18,6 +19,7 @@ import (
 
 var (
 	hostsfile string
+	timeout   int
 	masscan   bool
 	verbose   bool
 
@@ -25,12 +27,15 @@ var (
 		Use:   "bothan host:ip",
 		Short: "A tool to identify malicious-looking C2 servers online",
 		Run:   execute,
+		Args:  cobra.MinimumNArgs(1),
 	}
 )
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&hostsfile, "hostsfile", "f", "",
 		"Newline-serperated list of host:port entries to check")
+	rootCmd.PersistentFlags().IntVarP(&timeout, "timeout", "t", 5,
+		"Set timeout length for requests")
 	rootCmd.PersistentFlags().BoolVarP(&masscan, "masscan", "", false,
 		"Indicate whether input is from masscan (-oD output only)")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false,
@@ -139,7 +144,9 @@ func newRequest(scheme, hostAndPort, method string) *http.Request {
 }
 
 func doRequest(req *http.Request) (resp *http.Response, err error) {
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: time.Duration(timeout) * time.Second,
+	}
 	resp, err = client.Do(req)
 	if err != nil {
 		if req.URL.Scheme == "https" {
